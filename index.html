@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Timer App</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="top-bar">
+        <span id="minimize-icon" title="Minimize">&#x2015;</span> <!-- Unicode '―' -->
+      </div>
+  <div class="container">
+    <div class="current-task">
+      <div class="timer">2Hrs of 16Hrs</div>
+      <div class="task-name">Design Login Page</div>
+      <div class="task-details">
+        <div>Project: <strong>Client Dashboard</strong></div>
+        <div>Assigned By: <strong>John Doe</strong></div>
+        <div>Assigned On: <strong>2025-06-20</strong></div>
+        <div>Status: <strong>In Progress</strong></div>
+      </div>
+      <div class="controls">
+        <button id="pauseBtn">Pause</button>
+        <button id="resumeBtn">Resume</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="task-list">
+      <div class="task-card">
+        <div class="card-task-name">UI Fixes</div>
+        <div class="card-project">Project: Website Redesign</div>
+        <div class="card-progress">Progress: 60%</div>
+        <button class="view-btn">View</button>
+      </div>
+
+      <div class="task-card">
+        <div class="card-task-name">API Integration</div>
+        <div class="card-project">Project: Mobile App</div>
+        <div class="card-progress">Progress: 20%</div>
+        <button class="view-btn">View</button>
+      </div>
+
+      <div class="task-card">
+        <div class="card-task-name">Write Docs</div>
+        <div class="card-project">Project: Internal Tools</div>
+        <div class="card-progress">Progress: 90%</div>
+        <button class="view-btn">View</button>
+      </div>
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

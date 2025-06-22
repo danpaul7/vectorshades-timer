@@ -1,0 +1,126 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff5f5;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 500px;
+    margin: auto;
+    background: #ffe5e5;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.1);
+  }
+  
+  .current-task {
+    margin-bottom: 30px;
+  }
+  
+  .timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #b30000;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .task-name {
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: #800000;
+    margin-bottom: 10px;
+  }
+  
+  .task-details {
+    font-size: 14px;
+    background-color: #fff0f0;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .controls {
+    text-align: center;
+  }
+  
+  .controls button {
+    background-color: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    margin: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .controls button:hover {
+    background-color: #cc0000;
+  }
+  
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .task-card {
+    background-color: #fff0f0;
+    border-left: 5px solid #ff6666;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(255, 0, 0, 0.1);
+  }
+  
+  .card-task-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #b30000;
+  }
+  
+  .card-project,
+  .card-progress {
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  
+  .view-btn {
+    margin-top: 8px;
+    background-color: transparent;
+    border: 1px solid #ff4d4d;
+    color: #b30000;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .view-btn:hover {
+    background-color: #ffe6e6;
+  }
+  
+
+  .top-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 10px;
+  }
+  
+  #minimize-icon {
+    font-size: 18px;
+    color: #b30000;
+    cursor: pointer;
+    user-select: none;
+    background-color: #ffe5e5;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  
+  #minimize-icon:hover {
+    background-color: #ffcccc;
+  }
+  
