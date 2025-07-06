@@ -3,12 +3,12 @@ const path = require('path');
 
 let win = null;
 let tray = null;
-const isDev = !app.isPackaged;
+const isDev = true;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 350,
-    height: 500,
+    width: 500,
+    height: 700,
     show: false,
     frame: false,
     resizable: false,
@@ -20,15 +20,19 @@ function createWindow() {
   });
 
   if (isDev) {
-    win.loadURL('http://localhost:5173'); // Vite dev server
+    win.loadURL('https://vectorshades-frontend.vercel.app/auth/login'); // Vite dev server
   } else {
-    win.loadFile(path.join(__dirname, 'client/dist/index.html'));
+    win.loadFile(path.join(__dirname, 'client', 'dist', 'index.html'));
   }
 
   win.on('minimize', (e) => {
     e.preventDefault();
     win.hide();
   });
+
+  win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+  console.error('Failed to load page', errorCode, errorDescription);
+});
 
   win.on('close', () => {
     tray.destroy();

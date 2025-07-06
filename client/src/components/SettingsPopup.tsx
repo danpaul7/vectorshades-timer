@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
 const SettingsPopup = ({ onClose }) => {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState<any>("");
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setToken(token)
+  }, [])
+
+  const setTokenFunction = () => {
+    localStorage.setItem('token',token)
+    onClose({refresh:true})
+  }
 
   return (
     <div className="settings-popup-overlay">
@@ -24,8 +34,8 @@ const SettingsPopup = ({ onClose }) => {
             className="settings-input"
             placeholder="Enter your token"
           />
-          <button type="submit" className="settings-submit">
-            Submit
+          <button type="submit" onClick={setTokenFunction} className="settings-submit">
+            SET
           </button>
         </form>
       </div>
