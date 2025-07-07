@@ -2,15 +2,32 @@
   "name": "timer",
   "version": "1.0.0",
   "main": "index.js",
+  "description": "Task Timer Electron App",
+  "author": "Your Name",
+  "license": "ISC",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cd client && npm run build",
+    "dist": "npm run build && electron-builder"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
-    "electron": "^36.5.0"
+    "electron": "^36.5.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.yourcompany.timer",
+    "productName": "Task Timer",
+    "directories": {
+      "buildResources": "public"
+    },
+    "files": [
+      "index.js",
+      "public/**/*",
+      "client/dist/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/cover.png"
+    }
   }
 }

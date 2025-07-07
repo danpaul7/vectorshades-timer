@@ -3,7 +3,7 @@ const path = require('path');
 
 let win = null;
 let tray = null;
-const isDev = true;
+const isDev = false;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -47,7 +47,7 @@ ipcMain.on('minimize-window', () => {
 app.whenReady().then(() => {
   createWindow();
 
-  tray = new Tray(path.join(__dirname, 'public/icon.png'));
+  tray = new Tray(path.join(__dirname, 'public/test.png'));
   const menu = Menu.buildFromTemplate([
     { label: 'Show App', click: () => win.show() },
     { label: 'Quit', click: () => { tray.destroy(); app.quit(); } }
