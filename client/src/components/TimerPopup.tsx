@@ -39,7 +39,7 @@ const TimerPopup = () => {
   const editTaskHandler = (body) => {
     body = { ...body, ['id']: selectedTask._id }
     setrenderTask(selectedTask._id)
-    axios.patch('http://localhost:50000/projects/timer/task/edit', body, { params: { project: selectedTask.projectId } }).then(() => {
+    axios.patch('https://www.cableergo.com/projects/timer/task/edit', body, { params: { project: selectedTask.projectId } }).then(() => {
       fetchTasks()
     }).catch((err) => {
       console.log(err.message)
