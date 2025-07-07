@@ -47,7 +47,7 @@ const TimerPopup = () => {
   }
 
   const fetchTasks = async () => {
-    const { data } = await axios.get('http://localhost:50000/projects/timer/tasks',{headers:{
+    const { data } = await axios.get('https://www.cableergo.com/projects/timer/tasks',{headers:{
       'Authorization':localStorage.getItem('token')
     }})
     const tasks = data.response.data
