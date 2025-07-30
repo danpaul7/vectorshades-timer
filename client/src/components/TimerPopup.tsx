@@ -8,7 +8,8 @@ import {
   Laptop,
   Calendar,
   Pause,
-  Play
+  Play,
+  StepBack
 } from "lucide-react";
 import SettingsPopup from "./SettingsPopup";
 import axios from 'axios'
@@ -21,6 +22,8 @@ const TimerPopup = () => {
   const [onWork, setonWork] = useState(false)
   const [selectedTask, setselectedTask] = useState<any>()
   const [renderTask, setrenderTask] = useState()
+  const [selectedProject, setselectedProject] = useState('')
+  const [projectNavigation, setprojectNavigation] = useState(false)
   const [lastUpdated, setlastUpdated] = useState<any>(new Date())
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -36,9 +39,11 @@ const TimerPopup = () => {
 
   const resumeWorkingFunction = () => editTaskHandler({ status: 'In Progress', startedOn: new Date() })
 
+
   const editTaskHandler = (body) => {
-    body = { ...body, ['id']: selectedTask._id }
+    body = { ...body, ['id']: selectedTask._id, user: localStorage.getItem('token') }
     setrenderTask(selectedTask._id)
+
     axios.patch('https://www.cableergo.com/projects/timer/task/edit', body, { params: { project: selectedTask.projectId } }).then(() => {
       fetchTasks()
     }).catch((err) => {
@@ -47,9 +52,11 @@ const TimerPopup = () => {
   }
 
   const fetchTasks = async () => {
-    const { data } = await axios.get('https://www.cableergo.com/projects/timer/tasks',{headers:{
-      'Authorization':localStorage.getItem('token')
-    }})
+    const { data } = await axios.get('https://www.cableergo.com/projects/timer/tasks', {
+      headers: {
+        'Authorization': localStorage.getItem('token')
+      }
+    })
     const tasks = data.response.data
     setTaskData(tasks)
     const progressTasks = tasks.filter((e) => e.status === 'In Progress')
@@ -65,19 +72,49 @@ const TimerPopup = () => {
   }
 
   useEffect(() => {
-    if(!localStorage.getItem('token')) setSettingsOpen(true)
+    if (!localStorage.getItem('token')) setSettingsOpen(true)
     else fetchTasks()
   }, [])
 
   const closeSettingsPopup = (obj) => {
     setSettingsOpen(false)
-    if(obj.refresh === true) fetchTasks()
+    if (obj.refresh === true) fetchTasks()
   }
 
   const handleMinimize = () => {
     (window as any).electronAPI.minimizeApp();
-};
+  };
 
+  function getTasksByProjectName(projectName) {
+    return taskData.filter((task: any) => task.projectName === projectName);
+  }
+
+  function getTaskCountByProject() {
+    const projectTaskMap = {};
+
+    taskData.forEach((task: any) => {
+      const projectName = task.projectName;
+      if (projectTaskMap[projectName]) {
+        projectTaskMap[projectName]++;
+      } else {
+        projectTaskMap[projectName] = 1;
+      }
+    });
+
+    return Object.entries(projectTaskMap).map(([projectName, count]) => ({
+      projectName,
+      taskCount: count
+    }));
+  }
+
+  const handleSelectionSelect = (task) => {
+    if (projectNavigation) {
+      setselectedTask(task)
+    } else {
+      setselectedProject(task.projectName)
+      setprojectNavigation(true)
+    }
+  }
 
   return (
     <div className="app-wrapper">
@@ -117,10 +154,10 @@ const TimerPopup = () => {
                   <div className="time-elaps">
                     <Clock />
                   </div>
-                  {selectedTask.status === 'In Progress' ? <LiveHourTimer initialHours={selectedTask.completedHours} /> : <div className="current-time">
+                  {selectedTask.status === 'In Progress' ? <LiveHourTimer pauseTask={pauseWorkingFunction} initialHours={selectedTask.completedHours} maxHours={selectedTask.allocatedHours} /> : <div className="current-time">
                     {convertDecimalHoursToText(selectedTask.completedHours)}
                   </div>}
-                  <div className="total-time">Of {selectedTask.allocatedHours} Hrs</div>
+                  <div className="total-time">{selectedTask.status === 'In Progress' && 'Left'} Of {selectedTask.allocatedHours} Hrs</div>
 
                   {selectedTask.status === 'Paused' && <Play key={selectedTask} onClick={resumeWorkingFunction} className="pause" />}
                   {selectedTask.status === 'In Progress' && <Pause key={selectedTask} onClick={pauseWorkingFunction} className="pause" />}
@@ -152,11 +189,20 @@ const TimerPopup = () => {
             </>}
             <div className="tasks-container">
               <div className="tasks-box">
-                <p className="tasks-title">All Tasks</p>
+                {projectNavigation && <p className="tasks-title" style={{ color: '#bf191970', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => {
+                  setprojectNavigation(false)
+                  setselectedProject('')
+                }}>All Projects</p>}
+                <p className="tasks-title">{projectNavigation ? `${selectedProject} Tasks` : 'My Projects'}</p>
                 <ul className="task-list">
-                  {taskData.map((task: any, index) => (
-                    <li key={index} onClick={() => setselectedTask(task)} className="task-item">
-                      {task.name}
+                  {projectNavigation && getTasksByProjectName(selectedProject).map((task: any, index) => (
+                    <li key={index} onClick={() => handleSelectionSelect(task)} className="task-item">
+                      {index + 1} . {task.name}
+                    </li>
+                  ))}
+                  {!projectNavigation && getTaskCountByProject().map((task: any, index) => (
+                    <li key={index} onClick={() => handleSelectionSelect(task)} className="task-item">
+                      {task.projectName} ({task.taskCount})
                     </li>
                   ))}
                 </ul>
