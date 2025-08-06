@@ -44,8 +44,8 @@ const TimerPopup = () => {
     body = { ...body, ['id']: selectedTask._id, user: localStorage.getItem('token') }
     setrenderTask(selectedTask._id)
 
-    axios.patch('https://www.cableergo.com/projects/timer/task/edit', body, { params: { project: selectedTask.projectId } }).then(() => {
-      fetchTasks()
+    axios.patch('https://www.cableergo.com/projects/timer/task/edit', body, { params: { project: selectedTask.projectId } }).then(async () => {
+      await fetchTasks()
     }).catch((err) => {
       console.log(err.message)
     })
@@ -108,11 +108,13 @@ const TimerPopup = () => {
   }
 
   const handleSelectionSelect = (task) => {
-    if (projectNavigation) {
-      setselectedTask(task)
-    } else {
-      setselectedProject(task.projectName)
-      setprojectNavigation(true)
+    if (!onWork) {
+      if (projectNavigation) {
+        setselectedTask(task)
+      } else {
+        setselectedProject(task.projectName)
+        setprojectNavigation(true)
+      }
     }
   }
 
@@ -134,8 +136,8 @@ const TimerPopup = () => {
               </div>
 
               <div className="icon-group">
-                <span className="text">{formatDistanceToNow(lastUpdated, { addSuffix: true })}</span>
-                <RefreshCw className="icon" onClick={fetchTasks} />
+                {!onWork && <span className="text">{formatDistanceToNow(lastUpdated, { addSuffix: true })}</span>}
+                {!onWork && <RefreshCw className="icon" onClick={fetchTasks} />} 
                 <Settings onClick={() => setSettingsOpen(true)} className="icon" />
                 <Minimize2 className="icon" onClick={handleMinimize} />
               </div>
@@ -160,7 +162,7 @@ const TimerPopup = () => {
                   <div className="total-time">{selectedTask.status === 'In Progress' && 'Left'} Of {selectedTask.allocatedHours} Hrs</div>
 
                   {selectedTask.status === 'Paused' && <Play key={selectedTask} onClick={resumeWorkingFunction} className="pause" />}
-                  {selectedTask.status === 'In Progress' && <Pause key={selectedTask} onClick={pauseWorkingFunction} className="pause" />}
+                  {selectedTask.status === 'In Progress' && <Pause onClick={pauseWorkingFunction} className="pause" />}
 
                 </div>
               </div>
@@ -189,9 +191,11 @@ const TimerPopup = () => {
             </>}
             <div className="tasks-container">
               <div className="tasks-box">
-                {projectNavigation && <p className="tasks-title" style={{ color: '#bf191970', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => {
-                  setprojectNavigation(false)
-                  setselectedProject('')
+                {projectNavigation && <p className="tasks-title" style={{ color: !onWork ? '#bf191970' : 'grey' ,textDecoration: 'underline', cursor: onWork ? 'not-allowed' : 'pointer' }} onClick={() => {
+                  if(!onWork){
+                    setprojectNavigation(false)
+                    setselectedProject('')
+                  }
                 }}>All Projects</p>}
                 <p className="tasks-title">{projectNavigation ? `${selectedProject} Tasks` : 'My Projects'}</p>
                 <ul className="task-list">
